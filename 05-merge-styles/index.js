@@ -18,7 +18,7 @@ try {
           path.join(__dirname, 'project-dist', 'bundle.css')
         );
         // 4. Запись прочитанных данных и 5. Запись стилей в файл bundle.css
-        input.on('data', (chunk) => output.write((text += chunk)));
+        input.on('data', (chunk) => output.write((text += `${chunk}\n`)));
         input.on('error', (error) => console.log('Error', error.message));
       }
     }
