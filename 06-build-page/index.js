@@ -92,9 +92,28 @@ function copyFiles(name = 'assets') {
           }
         });
       }
+      fileDeletion(files, dest);
     });
   } catch (err) {
     console.log(err);
   }
 }
 copyFiles();
+
+function fileDeletion(files, dest) {
+  try {
+    fs.readdir(path.join(dest), (err, filesCopy) => {
+      if (err) throw err;
+
+      filesCopy.forEach((i) => {
+        if (files.indexOf(i) === -1) {
+          fs.unlink(path.join(dest, i), (err) => {
+            if (err) throw err;
+          });
+        }
+      });
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}

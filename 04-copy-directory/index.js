@@ -18,7 +18,26 @@ try {
         path.join(dest, file)
       );
     }
+    fileDeletion(files);
   });
 } catch (err) {
   console.log(err);
+}
+
+function fileDeletion(files) {
+  try {
+    fs.readdir(path.join(dest), (err, filesCopy) => {
+      if (err) throw err;
+
+      filesCopy.forEach((i) => {
+        if (files.indexOf(i) === -1) {
+          fs.unlink(path.join(dest, i), (err) => {
+            if (err) throw err;
+          });
+        }
+      });
+    });
+  } catch (err) {
+    console.log(err);
+  }
 }
