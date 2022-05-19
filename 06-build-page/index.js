@@ -5,7 +5,7 @@ fs.promises.mkdir(path.join(__dirname, 'project-dist'), { recursive: true });
 
 fs.readFile(path.join(__dirname, 'template.html'), 'utf-8', (err, data) => {
   if (err) throw err;
-  let index = data;
+  let indexHtml = data;
   fs.readdir(path.join(__dirname, 'components'), (err, files) => {
     if (err) throw err;
     for (let file of files) {
@@ -18,12 +18,11 @@ fs.readFile(path.join(__dirname, 'template.html'), 'utf-8', (err, data) => {
           let re = `{{${fileName}}}`;
           //   console.log(data);
           //   console.log(re);
-          index = index.replace(re, data);
-          //   console.log(index);
-          //outputHtml.write(index);
+          indexHtml = indexHtml.replace(re, data);
+          //   console.log(indexHtml);
           fs.writeFile(
             path.join(__dirname, 'project-dist', 'index.html'),
-            index,
+            indexHtml,
             (err) => {
               if (err) throw err;
             }
