@@ -96,13 +96,22 @@ function fileDelete(files, dest) {
   try {
     fs.readdir(path.join(dest), (err, filesCopy) => {
       if (err) throw err;
-
       filesCopy.forEach((i) => {
-        if (files.indexOf(i) === -1) {
-          fs.unlink(path.join(dest, i), (err) => {
-            if (err) throw err;
-          });
-        }
+        fs.stat(path.join(dest, i), function (err, stats) {
+          if (err) throw err;
+
+          if (files.indexOf(i) === -1) {
+            if (stats.isFile()) {
+              fs.unlink(path.join(dest, i), (err) => {
+                if (err) throw err;
+              });
+            } else {
+              fs.rmdir(path.join(dest, i), (err) => {
+                if (err) throw err;
+              });
+            }
+          }
+        });
       });
     });
   } catch (err) {
