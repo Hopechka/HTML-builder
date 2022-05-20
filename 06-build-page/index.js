@@ -16,10 +16,7 @@ fs.readFile(path.join(__dirname, 'template.html'), 'utf-8', (err, data) => {
           if (err) throw err;
           let fileName = path.parse(file).name;
           let re = `{{${fileName}}}`;
-          //   console.log(data);
-          //   console.log(re);
           indexHtml = indexHtml.replace(re, data);
-          //   console.log(indexHtml);
           fs.writeFile(
             path.join(__dirname, 'project-dist', 'index.html'),
             indexHtml,
@@ -37,27 +34,23 @@ fs.readFile(path.join(__dirname, 'template.html'), 'utf-8', (err, data) => {
 const stylesDest = path.join(__dirname, 'styles');
 // 2. Чтение содержимого папки styles
 
-try {
-  fs.readdir(stylesDest, (err, files) => {
-    if (err) throw err;
-    let text = '';
-    for (let file of files) {
-      // 3. Проверка является ли объект файлом и имеет ли файл нужное расширение
-      if (path.extname(file) === '.css') {
-        // 4. Чтение файла стилей
-        const input = fs.createReadStream(path.join(stylesDest, file), 'utf-8');
-        const output = fs.createWriteStream(
-          path.join(__dirname, 'project-dist', 'style.css')
-        );
-        // 4. Запись прочитанных данных и 5. Запись стилей в файл bundle.css
-        input.on('data', (chunk) => output.write((text += `${chunk}\n`)));
-        input.on('error', (error) => console.log('Error', error.message));
-      }
+fs.readdir(stylesDest, (err, files) => {
+  if (err) throw err;
+  let text = '';
+  for (let file of files) {
+    // 3. Проверка является ли объект файлом и имеет ли файл нужное расширение
+    if (path.extname(file) === '.css') {
+      // 4. Чтение файла стилей
+      const input = fs.createReadStream(path.join(stylesDest, file), 'utf-8');
+      const output = fs.createWriteStream(
+        path.join(__dirname, 'project-dist', 'style.css')
+      );
+      // 4. Запись прочитанных данных и 5. Запись стилей в файл bundle.css
+      input.on('data', (chunk) => output.write((text += `${chunk}\n`)));
+      input.on('error', (error) => console.log('Error', error.message));
     }
-  });
-} catch (err) {
-  console.log(err);
-}
+  }
+});
 
 // 7. Использовать скрипт из задания 04-copy-directory для переноса папки assets в папку project-dist
 
@@ -91,7 +84,7 @@ function copyFiles(name = 'assets') {
           }
         });
       }
-      fileDeletion(files, dest);
+      fileDelete(files, dest);
     });
   } catch (err) {
     console.log(err);
@@ -99,7 +92,7 @@ function copyFiles(name = 'assets') {
 }
 copyFiles();
 
-function fileDeletion(files, dest) {
+function fileDelete(files, dest) {
   try {
     fs.readdir(path.join(dest), (err, filesCopy) => {
       if (err) throw err;
