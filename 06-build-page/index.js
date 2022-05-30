@@ -1,7 +1,9 @@
 const path = require('path');
 const fs = require('fs');
 
-fs.promises.mkdir(path.join(__dirname, 'project-dist'), { recursive: true });
+const projectFolderDist = path.join(__dirname, 'project-dist');
+
+fs.promises.mkdir(projectFolderDist, { recursive: true });
 
 fs.readFile(path.join(__dirname, 'template.html'), 'utf-8', (err, data) => {
   if (err) throw err;
@@ -16,9 +18,10 @@ fs.readFile(path.join(__dirname, 'template.html'), 'utf-8', (err, data) => {
           if (err) throw err;
           let fileName = path.parse(file).name;
           let re = `{{${fileName}}}`;
-          indexHtml = indexHtml.replace(re, data);
+          let dataChange = data;
+          indexHtml = indexHtml.replace(re, dataChange);
           fs.writeFile(
-            path.join(__dirname, 'project-dist', 'index.html'),
+            path.join(projectFolderDist, 'index.html'),
             indexHtml,
             (err) => {
               if (err) throw err;
@@ -43,7 +46,7 @@ fs.readdir(stylesDest, (err, files) => {
       // 4. Чтение файла стилей
       const input = fs.createReadStream(path.join(stylesDest, file), 'utf-8');
       const output = fs.createWriteStream(
-        path.join(__dirname, 'project-dist', 'style.css')
+        path.join(projectFolderDist, 'style.css')
       );
       // 4. Запись прочитанных данных и 5. Запись стилей в файл bundle.css
       input.on('data', (chunk) => output.write((text += `${chunk}\n`)));
@@ -58,10 +61,10 @@ function copyFiles(name = 'assets') {
   let dest;
   let src;
   if (name === 'assets') {
-    dest = path.join(__dirname, 'project-dist', name);
+    dest = path.join(projectFolderDist, name);
     src = path.join(__dirname);
   } else {
-    dest = path.join(__dirname, 'project-dist', 'assets', name);
+    dest = path.join(projectFolderDist, 'assets', name);
     src = path.join(__dirname, 'assets');
   }
   fs.promises.mkdir(dest, { recursive: true });

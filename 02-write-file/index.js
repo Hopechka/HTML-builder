@@ -2,9 +2,10 @@
 const path = require('path');
 const fs = require('fs');
 const { stdin, stdout } = process;
+const pathToFile = path.join(__dirname, 'text.txt');
 
 // 2.Создание потока записи в текстовый файл
-const output = fs.createWriteStream(path.join(__dirname, 'text.txt'));
+const output = fs.createWriteStream(pathToFile);
 
 // 3.Вывод в консоль приветственного сообщения
 stdout.write('Hello my friend!\nPut your text here:\n');
@@ -25,3 +26,6 @@ process.on('exit', () => stdout.write('\nBye! Have a nice day!\n'));
 process.on('SIGINT', () => {
   process.exit();
 });
+
+//-------------Вариант из лекции----------------//
+// так как работа идет со строками, можно было использовать метод readline
